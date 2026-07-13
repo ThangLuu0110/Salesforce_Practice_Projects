@@ -1,0 +1,21 @@
+<template>
+    <div>
+        <header>
+            <h1>{title}</h1>
+            <div>
+                <input type="text" placeholder="Add a new task" />
+                <button>Add</button>
+            </div>
+            <div>
+                <template if:true={todoTasks.data}>
+                    <template for:each={todoTasks.data} for:item="task" for:index="index">
+                        <div key={task.Id}>
+                            <span>{task.Name}</span>
+                            <button>Delete</button>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </header>
+    </div>
+</template>
