@@ -1,4 +1,5 @@
 public class TodoApp_CRUD {
+    //Get all the todo tasks from the database
     @AuraEnabled(cacheable=true)
     public static List<Todo_Tasks__c> getAllTodoTasks(){
         
@@ -6,4 +7,4 @@ public class TodoApp_CRUD {
         
         return todoTasks;
     }
-}
+} 

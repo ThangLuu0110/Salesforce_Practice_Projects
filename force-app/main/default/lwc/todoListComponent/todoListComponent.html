@@ -2,16 +2,19 @@
     <div>
         <header>
             <h1>{title}</h1>
-            <div>
-                <input type="text" placeholder="Add a new task" />
-                <button>Add</button>
-            </div>
+            <lightning-record-form
+                object-api-name={objectApiName}
+                fields={fields}
+                record-id={recordId}
+                mode="edit"
+                onsubmit={handleAccountCreated}> </lightning-record-form> 
             <div>
                 <template if:true={todoTasks.data}>
                     <template for:each={todoTasks.data} for:item="task" for:index="index">
                         <div key={task.Id}>
                             <span>{task.Name}</span>
-                            <button>Delete</button>
+                            <span>{task.Tasks_Start_Date__c}</span>
+                            <lightning-button label="Delete" variant="destructive" onclick={deleteTask}></lightning-button>
                         </div>
                     </template>
                 </template>
