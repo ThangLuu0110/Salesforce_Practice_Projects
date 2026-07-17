@@ -2,15 +2,32 @@
     <div>
         <header>
             <h1>{title}</h1>
-            <lightning-record-form
-                object-api-name={objectApiName}
-                fields={fields}
-                record-id={recordId}
-                mode="edit"
-                onsubmit={handleAccountCreated}> </lightning-record-form> 
+            <form>
+                <div>
+                    <lightning-input 
+                        class="taskName" 
+                        type="text" 
+                        label="Task Name" 
+                        placeholder="Enter Task Name"
+                        value={taskNameValue}
+                        onchange={handleTaskNameChange}
+                    ></lightning-input>
+                    <lightning-input 
+                        class="startDate" 
+                        type="date" 
+                        label="Start Date" 
+                        placeholder="Enter Start Date"
+                        value={startDateValue}
+                        onchange={handleStartDateChange}
+                    ></lightning-input>
+                </div>
+                <div>
+                    <lightning-button label="Add Task" variant="brand" onclick={addNewTask}></lightning-button>
+                </div>
+            </form>
             <div>
-                <template if:true={todoTasks.data}>
-                    <template for:each={todoTasks.data} for:item="task" for:index="index">
+                <template if:true={todoTasksLists.data}>
+                    <template for:each={todoTasksLists.data} for:item="task" for:index="index">
                         <div key={task.Id}>
                             <span>{task.Name}</span>
                             <span>{task.Tasks_Start_Date__c}</span>

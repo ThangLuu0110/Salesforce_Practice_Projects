@@ -7,4 +7,14 @@ public class TodoApp_CRUD {
         
         return todoTasks;
     }
+
+    @AuraEnabled(cacheable=false)
+    public static void addNewTodoTask(String taskName, Date startDate){
+        Todo_Tasks__c newTask = new Todo_Tasks__c(
+            Name = taskName,
+            Tasks_Start_Date__c = startDate
+        );
+        
+        insert newTask;
+    }
 } 
