@@ -1,16 +1,49 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
 import getAllTodoTasks from '@salesforce/apex/TodoApp_CRUD.getAllTodoTasks';
-import TASK_NAME from '@salesforce/schema/Todo_Tasks__c.Name';
-import TASK_STATUS from '@salesforce/schema/Todo_Tasks__c.Tasks_Status__c';
-import TASK_START_DATE from '@salesforce/schema/Todo_Tasks__c.Tasks_Start_Date__c';
+import addNewTodoTask from '@salesforce/apex/TodoApp_CRUD.addNewTodoTask';
 
 export default class TodoListComponent extends LightningElement {
     title = 'Todo List';
-    objectApiName = 'Todo_Tasks__c';
-    fields = [TASK_NAME, TASK_STATUS, TASK_START_DATE];
-    recordId = '';
+    todoTasksLists = [];
+    @track taskNameValue = '';
+    @track startDateValue = '';
 
-    @wire(getAllTodoTasks) todoTasks;
+    @wire(getAllTodoTasks) todoTasks(results, error) {
+        if (results) {
+            this.todoTasksLists = results;
+        } else if (error) {
+            console.error('Error fetching todo tasks:', error);
+        }
+    }
+
+    addNewTask() {
+        const taskName = this.template.querySelector('.taskName').value;
+        const startDate = this.template.querySelector('.startDate').value;
+
+        this.handleResetValues();
+        addNewTodoTask({ taskName, startDate })
+        .then(() => {
+            return refreshApex(this.todoTasksLists);
+        })
+        .catch((error) => {
+            console.error('Error adding new task:', error);
+        })
+    }   
 
 
+    handleTaskNameChange(event) {   
+        this.taskNameValue = event.target.value;
+    }
+
+    handleStartDateChange(event) {
+        this.startDateValue = event.target.value;
+        
+    }
+
+    handleResetValues() {
+        console.log('Resetting values');
+        this.taskNameValue = '';
+        this.startDateValue = '';
+    }
 }
