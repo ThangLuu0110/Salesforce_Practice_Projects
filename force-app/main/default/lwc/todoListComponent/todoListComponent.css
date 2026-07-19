@@ -1,3 +1,83 @@
 *{
-    
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+:host {
+    --bg-color: #eff2f7;
+    --items-color: #ffffff;
+}
+
+.taskList{
+    background-color: var(--bg-color);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.taskList_title{
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.taskList_form {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+}
+
+.taskList_form-inputs {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: flex-start;
+    height: 70px;
+}
+
+.taskList_form-input.taskName {
+    width: 250px;
+}
+
+.taskList_form-input.taskDeadline {
+    width: 170px;
+}
+
+.taskList_form-button{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 10px;
+}
+
+.taskList_form-button_add button{
+   height: 30px;
+}
+
+.taskList_section{
+    margin-top: 25px;
+}
+
+.taskList_section-item{
+    height: 60px;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--items-color);
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 0.5fr 6fr 3.5fr;
+    align-items: center;
+}
+
+.taskList_section-item_infor{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.taskList_section-item_actions lightning-button{
+    margin-left: 10px;
 }
