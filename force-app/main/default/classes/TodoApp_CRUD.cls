@@ -3,18 +3,25 @@ public class TodoApp_CRUD {
     @AuraEnabled(cacheable=true)
     public static List<Todo_Tasks__c> getAllTodoTasks(){
         
-        List<Todo_Tasks__c> todoTasks = [SELECT Name, Tasks_Status__c, Tasks_Start_Date__c FROM Todo_Tasks__c];
+        List<Todo_Tasks__c> todoTasks = [SELECT Id, Name, Tasks_Status__c, Tasks_Deadline__c FROM Todo_Tasks__c];
         
         return todoTasks;
     }
 
     @AuraEnabled(cacheable=false)
-    public static void addNewTodoTask(String taskName, Date startDate){
+    public static void addNewTodoTask(String taskName, Date taskDeadline){
         Todo_Tasks__c newTask = new Todo_Tasks__c(
             Name = taskName,
-            Tasks_Start_Date__c = startDate
+            Tasks_Deadline__c = taskDeadline
         );
         
         insert newTask;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static void deleteTodoTask(Id taskId){
+        Todo_Tasks__c taskToDelete = [SELECT Id FROM Todo_Tasks__c WHERE Id = :taskId LIMIT 1];
+        
+        delete taskToDelete;
     }
 } 
