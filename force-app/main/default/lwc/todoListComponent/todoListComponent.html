@@ -24,7 +24,12 @@
                     ></lightning-input>
                 </div>
                 <div class="taskList_form-button">
-                    <lightning-button label="Add" variant="brand" onclick={addNewTask}></lightning-button>
+                    <template if:true={isUpdateMode}>
+                        <lightning-button label="Update" variant="brand" onclick={updateTask}></lightning-button>
+                    </template>
+                    <template if:false={isUpdateMode}>
+                        <lightning-button label="Add" variant="brand" onclick={addNewTask}></lightning-button>  
+                    </template>
                 </div>
             </form>
         </header>
@@ -32,6 +37,7 @@
             <!-- Task List Section -->
             <ul class="taskList_section-items">
                 <template if:true={todoTasksLists.data}>
+                    <h2><b>Todo Tasks ({todoTasksLists.data.length})</b></h2>
                     <template for:each={todoTasksLists.data} for:item="task" for:index="index">
                         <li class="taskList_section-item" key={task.Id}>
                             <div class="taskList_section-item_checkbox">
@@ -42,7 +48,7 @@
                                 <span class="taskList_section-item_deadline"><b>Deadline:</b> {task.Tasks_Deadline__c}</span>
                             </div>
                             <div class="taskList_section-item_actions">
-                                <lightning-button label="Edit" variant="brand" onclick={editTask} data-id={task.Id}></lightning-button>
+                                <lightning-button label="Edit" variant="brand" onclick={handleEditTask} data-id={task.Id}></lightning-button>
                                 <lightning-button label="Delete" variant="destructive" onclick={deleteTask} data-id={task.Id}></lightning-button>
                             </div>
                         </li>

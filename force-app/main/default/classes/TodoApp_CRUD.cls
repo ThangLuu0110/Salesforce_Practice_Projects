@@ -24,4 +24,14 @@ public class TodoApp_CRUD {
         
         delete taskToDelete;
     }
+
+    @AuraEnabled(cacheable=false)
+    public static void updateTodoTask(Id taskId, String taskName, Date taskDeadline){
+        Todo_Tasks__c taskToUpdate = [SELECT Id, Name, Tasks_Deadline__c FROM Todo_Tasks__c WHERE Id = :taskId LIMIT 1];
+        
+        taskToUpdate.Name = taskName;
+        taskToUpdate.Tasks_Deadline__c = taskDeadline;
+        
+        update taskToUpdate;
+    }
 } 
