@@ -67,12 +67,18 @@
     padding: 10px;
     background-color: var(--items-color);
     margin-bottom: 10px;
-    display: grid;
-    grid-template-columns: 0.5fr 6fr 3.5fr;
-    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.taskList_section-item_infor{
+.disabled-li {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevents all mouse clicks */
+}
+
+.taskList_section-item_info{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

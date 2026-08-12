@@ -3,7 +3,7 @@ public class TodoApp_CRUD {
     @AuraEnabled(cacheable=true)
     public static List<Todo_Tasks__c> getAllTodoTasks(){
         
-        List<Todo_Tasks__c> todoTasks = [SELECT Id, Name, Tasks_Status__c, Tasks_Deadline__c FROM Todo_Tasks__c];
+        List<Todo_Tasks__c> todoTasks = [SELECT Id, Name, Tasks_Status__c, Tasks_Deadline__c FROM Todo_Tasks__c WHERE Tasks_Status__c != 'Done'];
         
         return todoTasks;
     }
@@ -33,5 +33,14 @@ public class TodoApp_CRUD {
         taskToUpdate.Tasks_Deadline__c = taskDeadline;
         
         update taskToUpdate;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static void completeTodoTask(Id taskId){
+        Todo_Tasks__c taskToComplete = [SELECT Id, Name, Tasks_Deadline__c FROM Todo_Tasks__c WHERE Id = :taskId LIMIT 1];
+
+        taskToComplete.Tasks_Status__c = 'Done';
+        
+        update taskToComplete;
     }
 } 

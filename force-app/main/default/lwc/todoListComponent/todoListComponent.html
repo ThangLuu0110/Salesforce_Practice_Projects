@@ -25,10 +25,10 @@
                 </div>
                 <div class="taskList_form-button">
                     <template if:true={isUpdateMode}>
-                        <lightning-button label="Update" variant="brand" onclick={updateTask}></lightning-button>
+                        <lightning-button label="Update" variant="brand" onclick={handleUpdateTask}></lightning-button>
                     </template>
                     <template if:false={isUpdateMode}>
-                        <lightning-button label="Add" variant="brand" onclick={addNewTask}></lightning-button>  
+                        <lightning-button label="Add" variant="brand" onclick={handleAddNewTask}></lightning-button>  
                     </template>
                 </div>
             </form>
@@ -39,17 +39,15 @@
                 <template if:true={todoTasksLists.data}>
                     <h2><b>Todo Tasks ({todoTasksLists.data.length})</b></h2>
                     <template for:each={todoTasksLists.data} for:item="task" for:index="index">
-                        <li class="taskList_section-item" key={task.Id}>
-                            <div class="taskList_section-item_checkbox">
-                                <lightning-input class="taskList_form-input taskChecked" type="checkbox"></lightning-input>
-                            </div>
-                            <div class="taskList_section-item_infor">
+                        <li class="taskList_section-item" key={task.Id} >
+                            <div class="taskList_section-item_info">
                                 <span class="taskList_section-item_name"><b>Task:</b> {task.Name}</span>
                                 <span class="taskList_section-item_deadline"><b>Deadline:</b> {task.Tasks_Deadline__c}</span>
                             </div>
                             <div class="taskList_section-item_actions">
+                                <lightning-button variant="success" label="Complete" onclick={handleCompleteTask} data-id={task.Id}></lightning-button>
                                 <lightning-button label="Edit" variant="brand" onclick={handleEditTask} data-id={task.Id}></lightning-button>
-                                <lightning-button label="Delete" variant="destructive" onclick={deleteTask} data-id={task.Id}></lightning-button>
+                                <lightning-button label="Delete" variant="destructive" onclick={handleDeleteTask} data-id={task.Id}></lightning-button>
                             </div>
                         </li>
                     </template>

@@ -4,6 +4,7 @@ import getAllTodoTasks from '@salesforce/apex/TodoApp_CRUD.getAllTodoTasks';
 import addNewTodoTask from '@salesforce/apex/TodoApp_CRUD.addNewTodoTask';
 import deleteTodoTask from '@salesforce/apex/TodoApp_CRUD.deleteTodoTask';
 import updateTodoTask from '@salesforce/apex/TodoApp_CRUD.updateTodoTask';
+import completeTodoTask from '@salesforce/apex/TodoApp_CRUD.completeTodoTask';
 
 export default class TodoListComponent extends LightningElement {
     dateOfToday = new Date().toISOString().split('T')[0];
@@ -22,7 +23,7 @@ export default class TodoListComponent extends LightningElement {
         }
     }
 
-    addNewTask() {
+    handleAddNewTask() {
         const taskName = this.template.querySelector('.taskList_form-input.taskName').value;
         const taskDeadline = this.template.querySelector('.taskList_form-input.taskDeadline').value;
 
@@ -36,7 +37,7 @@ export default class TodoListComponent extends LightningElement {
         })
     }
     
-    deleteTask(event) {
+    handleDeleteTask(event) {
        const taskId = event.target.dataset.id;
 
        deleteTodoTask({ taskId })
@@ -61,7 +62,7 @@ export default class TodoListComponent extends LightningElement {
 
     }
 
-    updateTask() {
+    handleUpdateTask() {
         const taskName = this.template.querySelector('.taskList_form-input.taskName').value;
         const taskDeadline = this.template.querySelector('.taskList_form-input.taskDeadline').value;
 
@@ -74,8 +75,18 @@ export default class TodoListComponent extends LightningElement {
         .catch((error) => {
             console.error('Error updating task:', error);
         });
+    }
 
+    handleCompleteTask(event) {
+        const taskId = event.currentTarget.dataset.id;
 
+        completeTodoTask({ taskId })
+        .then(() => {
+            return refreshApex(this.todoTasksLists);
+        })
+        .catch((error) => {
+           console.error('Error complete task:', error);
+       });
     }
 
     handleTaskNameChange(event) {   
