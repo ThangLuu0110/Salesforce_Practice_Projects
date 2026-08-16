@@ -1,43 +1,53 @@
-<!-- Team Tasks Custom Fields:
- - Name - input
- - Priority - Picklist
- - Assigned To - Record Picker
- - Deadline - Date
- - Estimated Hours - Number
--->
 <template>
     <div class="teamTasks">
         <header class="teamTasks_header">
             <form class="teamTasks_header-create">
                 <div class="teamTasks_header-create-form">
-                    <lightning-input 
-                    type="text" 
-                    label="Task Name" 
-                    placeholder="Enter Task Name"
-                    ></lightning-input>
-                    <lightning-select
-                        name="Priority"
-                        label="Priority"
-                        value={valuePriority}
-                        options={optionsPriority}
-                        onchange={handleChangePriority}
-                        required
-                    ></lightning-select>
-                    <lightning-record-picker
-                        label="Assigned To"
-                        placeholder="Search Members..."
-                        object-api-name="Team_Members__c"
-                    ></lightning-record-picker>
-                    <lightning-input 
-                        type="date" 
-                        label="Due Date" 
-                        placeholder="Enter Due Date"
-                    ></lightning-input>
-                    <lightning-input 
-                        type="number" 
-                        label="Estimated Hours" 
-                        placeholder="Enter Estimated Hours"
-                    ></lightning-input>
+                    <div class="teamTasks_header-create-form-firstRow">
+                        <lightning-input
+                            class="taskName-input"
+                            type="text" 
+                            label="Task Name" 
+                            placeholder="Enter Task Name"
+                        ></lightning-input>
+                        <lightning-record-picker
+                            class="taskProject-input"
+                            label="Project"
+                            placeholder="Search Projects..."
+                            object-api-name="Team_Projects__c"
+                            value={projectId}
+                            onchange={handleProjectChange}
+                        ></lightning-record-picker>
+                    </div>
+                    <div class="teamTasks_header-create-form-secondRow">
+                        <lightning-select
+                            class="taskPriority-input"
+                            name="Priority"
+                            label="Priority"
+                            value={valuePriority}
+                            options={optionsPriority}
+                            onchange={handleChangePriority}
+                            required
+                        ></lightning-select>
+                        <lightning-record-picker
+                            class="taskAssignedTo-input"
+                            label="Assigned To"
+                            placeholder="Search Members..."
+                            object-api-name="Team_Members__c"
+                        ></lightning-record-picker>
+                        <lightning-input
+                            class="taskDueDate-input"
+                            type="date" 
+                            label="Due Date" 
+                            placeholder="Enter Due Date"
+                        ></lightning-input>
+                        <lightning-input
+                            class="taskEstimatedHours-input"
+                            type="number" 
+                            label="Estimated Hours" 
+                            placeholder="Enter Estimated Hours"
+                        ></lightning-input>
+                    </div>
                 </div>
                 <div class="teamTasks_header-create-button">
                     <lightning-button 
@@ -49,7 +59,13 @@
             </form>
         </header>
         <section class="teamTasks_task-table">
-
+            <lightning-datatable
+                    key-field="id"
+                    data={teamTasksList}
+                    columns={columns}
+                    selected-rows={selectedTask}
+                    onrowaction={handleRowAction}>
+            </lightning-datatable>
         </section>
     </div>
 </template> 
