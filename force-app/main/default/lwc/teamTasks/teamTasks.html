@@ -60,11 +60,14 @@
         </header>
         <section class="teamTasks_task-table">
             <lightning-datatable
-                    key-field="id"
-                    data={teamTasksList}
-                    columns={columns}
-                    selected-rows={selectedTask}
-                    onrowaction={handleRowAction}>
+                key-field="Id"
+                data={teamTasksList}
+                columns={columns}
+                selected-rows={selectedTask}
+                onrowaction={handleRowAction}
+                draft-values={draftValues}
+                onsave={handleUpdateTask}>
+            >
             </lightning-datatable>
         </section>
     </div>

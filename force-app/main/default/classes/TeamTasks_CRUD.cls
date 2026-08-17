@@ -23,7 +23,7 @@ public with sharing class TeamTasks_CRUD {
         String taskPriority, 
         String taskAssignedTo, 
         Date taskDueDate, 
-        Integer taskEstimatedTime
+        Decimal taskEstimatedHours
     ) {
         Team_Tasks__c newTask = new Team_Tasks__c(
             Name = taskName,
@@ -31,9 +31,27 @@ public with sharing class TeamTasks_CRUD {
             Tasks_Priority__c = taskPriority,
             Tasks_Assigned_To__c = taskAssignedTo,
             Tasks_Due_Date__c = taskDueDate,
-            Tasks_Hours_Estimated__c = taskEstimatedTime
+            Tasks_Hours_Estimated__c = taskEstimatedHours
         );
         
         insert newTask;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static void handleUpdateTasks(List<Team_Tasks__c> tasks) {
+        List<Database.SaveResult> results = Database.update(tasks, false);
+
+        List<String> errors = new List<String>();
+        for (Integer i = 0; i < results.size(); i++) {
+            if (!results[i].isSuccess()) {
+                for (Database.Error err : results[i].getErrors()) {
+                    errors.add('Row ' + (i + 1) + ': ' + err.getMessage());
+                }
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            throw new AuraHandledException(String.join(errors, '; '));
+        }
     }
 }
