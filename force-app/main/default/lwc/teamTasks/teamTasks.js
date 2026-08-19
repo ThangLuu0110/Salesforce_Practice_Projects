@@ -3,44 +3,17 @@ import { refreshApex } from '@salesforce/apex';
 import getAllTeamTasks from '@salesforce/apex/TeamTasks_CRUD.getAllTeamTasks';
 import handleCreateTask from '@salesforce/apex/TeamTasks_CRUD.handleCreateTask';
 import handleUpdateTasks from '@salesforce/apex/TeamTasks_CRUD.handleUpdateTasks';
-
-const COLUMNS = [
-    { label: 'Task Name', fieldName: 'Name', type: 'text', wrapText: true, editable: true },
-    { label: 'Project', fieldName: 'Team_Projects__c', type: 'text' },
-    {
-        label: 'Priority',
-        fieldName: 'Tasks_Priority__c',
-        type: 'text',
-        cellAttributes: {
-            class: { fieldName: 'priorityClass' }
-        }
-    },
-    { label: 'Due Date', fieldName: 'Tasks_Due_Date__c', type: 'date-local', editable: true },
-    { label: 'Assigned To', fieldName: 'Tasks_Assigned_To__c', type: 'text' },
-    { label: 'Status', fieldName: 'Tasks_Status__c', type: 'text' },
-    {
-        label: 'Estimated Hours',
-        fieldName: 'Tasks_Hours_Estimated__c',
-        type: 'number',
-        typeAttributes: { minimumFractionDigits: 1 },
-        cellAttributes: { alignment: 'left' },
-        editable: true
-    }
-];
-
-const PRIORITY_CLASS_MAP = {
-    High: 'priority-high',
-    Medium: 'priority-medium',
-    Low: 'priority-low'
-};
+import { COLUMNS, PRIORITY_CLASS_MAP } from './teamTasksConst';
 
 export default class TeamTasks extends LightningElement {
+    teamTasksWiredResult;
+    sortedBy;
     valuePriority = '';
-    draftValues = [];
+    sortedDirection = 'asc';
     columns = COLUMNS;
+    draftValues = [];
     teamTasksList = [];
     @track selectedTask = [];
-    teamTasksWiredResult;
 
     @wire(getAllTeamTasks) wiredTeamTasks(result) {
         this.teamTasksWiredResult = result;
@@ -111,6 +84,35 @@ export default class TeamTasks extends LightningElement {
                 console.error('Error updating task:', error);
             })
 
+    }
+
+    handleSort(event) {
+        const { fieldName, sortDirection } = event.detail;
+
+        this.sortedBy = fieldName;
+        this.sortedDirection = sortDirection;
+        this.teamTasksList = this.sortData(fieldName, sortDirection);
+    }
+
+    sortData(fieldName, direction) {
+        const data = [...this.teamTasksList];
+        const isAsc = direction === 'asc';
+
+        data.sort((a, b) => {
+            let valA = a[fieldName] ?? '';
+            let valB = b[fieldName] ?? '';
+
+            // Dates and numbers compare fine as-is; strings need lowercasing
+            // for a case-insensitive sort.
+            if (typeof valA === 'string') valA = valA.toLowerCase();
+            if (typeof valB === 'string') valB = valB.toLowerCase();
+
+            if (valA < valB) return isAsc ? -1 : 1;
+            if (valA > valB) return isAsc ? 1 : -1;
+            return 0;
+        });
+
+        return data;
     }
 
     handleChangePriority(event) {

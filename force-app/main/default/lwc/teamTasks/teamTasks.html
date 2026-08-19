@@ -66,7 +66,10 @@
                 selected-rows={selectedTask}
                 onrowaction={handleRowAction}
                 draft-values={draftValues}
-                onsave={handleUpdateTask}>
+                onsave={handleUpdateTask}
+                sorted-by={sortedBy}
+                sorted-direction={sortedDirection}
+                onsort={handleSort}
             >
             </lightning-datatable>
         </section>
