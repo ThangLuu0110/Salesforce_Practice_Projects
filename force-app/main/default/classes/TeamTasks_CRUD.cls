@@ -11,6 +11,7 @@ public with sharing class TeamTasks_CRUD {
             Tasks_Assigned_To__r.Name, Tasks_Status__c, 
             Tasks_Hours_Estimated__c 
             FROM Team_Tasks__c
+            WHERE Tasks_Status__c != 'Done'
         ];
 
         return teamTasks;

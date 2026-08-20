@@ -9,6 +9,9 @@
                             type="text" 
                             label="Task Name" 
                             placeholder="Enter Task Name"
+                            required
+                            maxlength="80"
+                            message-when-value-missing="Task name is required."
                         ></lightning-input>
                         <lightning-record-picker
                             class="taskProject-input"
@@ -17,6 +20,8 @@
                             object-api-name="Team_Projects__c"
                             value={projectId}
                             onchange={handleProjectChange}
+                            required
+                            message-when-value-missing="Select a project for this task."
                         ></lightning-record-picker>
                     </div>
                     <div class="teamTasks_header-create-form-secondRow">
@@ -34,6 +39,8 @@
                             label="Assigned To"
                             placeholder="Search Members..."
                             object-api-name="Team_Members__c"
+                            required
+                            message-when-value-missing="Select a project for this task."
                         ></lightning-record-picker>
                         <lightning-input
                             class="taskDueDate-input"

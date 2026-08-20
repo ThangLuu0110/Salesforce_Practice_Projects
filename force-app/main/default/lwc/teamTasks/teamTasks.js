@@ -15,6 +15,15 @@ export default class TeamTasks extends LightningElement {
     teamTasksList = [];
     @track selectedTask = [];
 
+    get optionsPriority() {
+        return [
+            { label: 'Choose Priority...', value: '' },
+            { label: 'High', value: 'High' },
+            { label: 'Medium', value: 'Medium' },
+            { label: 'Low', value: 'Low' },
+        ];
+    }
+
     @wire(getAllTeamTasks) wiredTeamTasks(result) {
         this.teamTasksWiredResult = result;
 
@@ -37,20 +46,11 @@ export default class TeamTasks extends LightningElement {
         }
     }
 
-    handleTasksSelection(event) {
-        this.selectedTask = event.detail.selectedTask;
-    }
-
-    get optionsPriority() {
-        return [
-            { label: 'Choose Priority...', value: '' },
-            { label: 'High', value: 'High' },
-            { label: 'Medium', value: 'Medium' },
-            { label: 'Low', value: 'Low' },
-        ];
-    }
-
     handleCreateTask() {
+        if (!this.validateForm()) {
+            return; // stop here - error messages are already showing on the fields
+        }
+        
         const taskName = this.template.querySelector('.taskName-input').value;
         const taskProject = this.template.querySelector('.taskProject-input').value;
         const taskPriority = this.valuePriority;
@@ -86,6 +86,42 @@ export default class TeamTasks extends LightningElement {
 
     }
 
+    validateForm() {
+    // Every Lightning base input/select/record-picker supports reportValidity(),
+    // which both returns a boolean AND visually displays the error message
+    // under the field - no need to build your own error UI.
+    const inputFields = this.template.querySelectorAll(
+        '.taskName-input, .taskProject-input, .taskPriority-input, .taskAssignedTo-input, .taskDueDate-input, .taskEstimatedHours-input'
+    );
+
+    let isValid = true;
+
+    inputFields.forEach((field) => {
+        if (!field.reportValidity()) {
+            isValid = false;
+        }
+    });
+
+    // Custom cross-field / business rule: due date can't be in the past.
+    const dueDateField = this.template.querySelector('.taskDueDate-input');
+    if (dueDateField.value) {
+        const selectedDate = new Date(dueDateField.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            dueDateField.setCustomValidity('Due date cannot be in the past.');
+            dueDateField.reportValidity();
+            isValid = false;
+        } else {
+            dueDateField.setCustomValidity(''); // clear any previous custom error
+            dueDateField.reportValidity();
+        }
+    }
+
+    return isValid;
+}
+
     handleSort(event) {
         const { fieldName, sortDirection } = event.detail;
 
@@ -113,6 +149,10 @@ export default class TeamTasks extends LightningElement {
         });
 
         return data;
+    }
+
+    handleTasksSelection(event) {
+        this.selectedTask = event.detail.selectedTask;
     }
 
     handleChangePriority(event) {
