@@ -62,6 +62,16 @@
                         variant="brand" 
                         onclick={handleCreateTask}
                     ></lightning-button>
+                    <lightning-button 
+                        label="In Progress" 
+                        variant="success" 
+                        onclick={handleInProgressTask}
+                    ></lightning-button>
+                    <lightning-button 
+                        label="Delete" 
+                        variant="destructive-text" 
+                        onclick={handleDeleteTask}
+                    ></lightning-button>
                 </div>
             </form>
         </header>
@@ -70,8 +80,7 @@
                 key-field="Id"
                 data={teamTasksList}
                 columns={columns}
-                selected-rows={selectedTask}
-                onrowaction={handleRowAction}
+                onrowselection={handleTasksSelection}
                 draft-values={draftValues}
                 onsave={handleUpdateTask}
                 sorted-by={sortedBy}

@@ -55,4 +55,21 @@ public with sharing class TeamTasks_CRUD {
             throw new AuraHandledException(String.join(errors, '; '));
         }
     }
+
+    @AuraEnabled(cacheable=false)
+    public static void handleInProgressTask(List<Id> taskIds) {
+        List<Team_Tasks__c> tasksToUpdate = [SELECT Id, Tasks_Status__c FROM Team_Tasks__c WHERE Id IN :taskIds];
+        
+        for (Team_Tasks__c task : tasksToUpdate) {
+            task.Tasks_Status__c = 'In Progress';
+        }
+        
+        update tasksToUpdate;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static void handleDeleteTasks(List<Id> taskIds) {
+        List<Team_Tasks__c> tasksToDelete = [SELECT Id FROM Team_Tasks__c WHERE Id IN :taskIds];
+        delete tasksToDelete;
+    }
 }

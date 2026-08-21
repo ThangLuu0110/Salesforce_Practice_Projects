@@ -3,6 +3,8 @@ import { refreshApex } from '@salesforce/apex';
 import getAllTeamTasks from '@salesforce/apex/TeamTasks_CRUD.getAllTeamTasks';
 import handleCreateTask from '@salesforce/apex/TeamTasks_CRUD.handleCreateTask';
 import handleUpdateTasks from '@salesforce/apex/TeamTasks_CRUD.handleUpdateTasks';
+import handleInProgressTask from '@salesforce/apex/TeamTasks_CRUD.handleInProgressTask';
+import handleDeleteTasks from '@salesforce/apex/TeamTasks_CRUD.handleDeleteTasks';
 import { COLUMNS, PRIORITY_CLASS_MAP } from './teamTasksConst';
 
 export default class TeamTasks extends LightningElement {
@@ -13,6 +15,7 @@ export default class TeamTasks extends LightningElement {
     columns = COLUMNS;
     draftValues = [];
     teamTasksList = [];
+    datatableKey = 0; // Used to force re-render the datatable
     @track selectedTask = [];
 
     get optionsPriority() {
@@ -90,37 +93,77 @@ export default class TeamTasks extends LightningElement {
     // Every Lightning base input/select/record-picker supports reportValidity(),
     // which both returns a boolean AND visually displays the error message
     // under the field - no need to build your own error UI.
-    const inputFields = this.template.querySelectorAll(
-        '.taskName-input, .taskProject-input, .taskPriority-input, .taskAssignedTo-input, .taskDueDate-input, .taskEstimatedHours-input'
-    );
+        const inputFields = this.template.querySelectorAll(
+            '.taskName-input, .taskProject-input, .taskPriority-input, .taskAssignedTo-input, .taskDueDate-input, .taskEstimatedHours-input'
+        );
 
-    let isValid = true;
+        let isValid = true;
 
-    inputFields.forEach((field) => {
-        if (!field.reportValidity()) {
-            isValid = false;
+        inputFields.forEach((field) => {
+            if (!field.reportValidity()) {
+                isValid = false;
+            }
+        });
+
+        // Custom cross-field / business rule: due date can't be in the past.
+        const dueDateField = this.template.querySelector('.taskDueDate-input');
+        if (dueDateField.value) {
+            const selectedDate = new Date(dueDateField.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                dueDateField.setCustomValidity('Due date cannot be in the past.');
+                dueDateField.reportValidity();
+                isValid = false;
+            } else {
+                dueDateField.setCustomValidity(''); // clear any previous custom error
+                dueDateField.reportValidity();
+            }
         }
-    });
 
-    // Custom cross-field / business rule: due date can't be in the past.
-    const dueDateField = this.template.querySelector('.taskDueDate-input');
-    if (dueDateField.value) {
-        const selectedDate = new Date(dueDateField.value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selectedDate < today) {
-            dueDateField.setCustomValidity('Due date cannot be in the past.');
-            dueDateField.reportValidity();
-            isValid = false;
-        } else {
-            dueDateField.setCustomValidity(''); // clear any previous custom error
-            dueDateField.reportValidity();
-        }
+        return isValid;
     }
 
-    return isValid;
-}
+    handleInProgressTask() {
+         
+        // Implement the logic to mark the selected tasks as "In Progress"
+        const idsToUpdate = this.selectedTask.map(task => task.Id);
+
+        handleInProgressTask({ taskIds: idsToUpdate })
+        .then(() => {
+            // Handle success, e.g., show a success message or refresh the task list
+            const dataTable = this.template.querySelector('lightning-datatable');
+            if (dataTable) {
+                dataTable.selectedRows = [];
+            }
+
+        this.selectedTask = []; 
+            return refreshApex(this.teamTasksWiredResult);
+
+        })
+        .catch((error) => {
+            // Handle error, e.g., show an error message
+            console.error('Error marking tasks as In Progress:', error);
+        });
+        // For example, you might want to update their status in the database
+    }
+
+    handleDeleteTask() {
+        // Implement the logic to delete the selected tasks
+        const idsToDelete = this.selectedTask.map(task => task.Id);
+
+        handleDeleteTasks({ taskIds: idsToDelete })
+        .then(() => {
+
+            this.selectedTask = [];
+            return refreshApex(this.teamTasksWiredResult);
+        })
+        .catch((error) => {
+            // Handle error, e.g., show an error message
+            console.error('Error deleting tasks:', error);
+        });
+    }
 
     handleSort(event) {
         const { fieldName, sortDirection } = event.detail;
@@ -152,8 +195,12 @@ export default class TeamTasks extends LightningElement {
     }
 
     handleTasksSelection(event) {
-        this.selectedTask = event.detail.selectedTask;
+        this.selectedTask = event.detail.selectedRows;
     }
+
+    handleConfirmTask() {}
+        // Implement the logic to confirm the selected tasks
+        // For example, you might want to update their status or perform some action
 
     handleChangePriority(event) {
         this.valuePriority = event.detail.value;
