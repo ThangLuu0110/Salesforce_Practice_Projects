@@ -197,11 +197,7 @@ export default class TeamTasks extends LightningElement {
     handleTasksSelection(event) {
         this.selectedTask = event.detail.selectedRows;
     }
-
-    handleConfirmTask() {}
-        // Implement the logic to confirm the selected tasks
-        // For example, you might want to update their status or perform some action
-
+ 
     handleChangePriority(event) {
         this.valuePriority = event.detail.value;
     }

@@ -21,4 +21,10 @@
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
+    margin: 10px auto;
 }
+
+.teamTasks_header-create-button lightning-button {
+    margin-left: 10px;
+}
+

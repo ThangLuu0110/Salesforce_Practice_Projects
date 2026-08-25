@@ -57,17 +57,20 @@
                     </div>
                 </div>
                 <div class="teamTasks_header-create-button">
-                    <lightning-button 
+                    <lightning-button
+                        class="teamTasks_header-create-button-create"
                         label="Create Task" 
                         variant="brand" 
                         onclick={handleCreateTask}
                     ></lightning-button>
-                    <lightning-button 
+                    <lightning-button
+                        class="teamTasks_header-create-button-inProgress"
                         label="In Progress" 
                         variant="success" 
                         onclick={handleInProgressTask}
                     ></lightning-button>
                     <lightning-button 
+                        class="teamTasks_header-create-button-delete"
                         label="Delete" 
                         variant="destructive-text" 
                         onclick={handleDeleteTask}
