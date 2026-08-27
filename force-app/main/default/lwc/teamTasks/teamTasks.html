@@ -13,16 +13,15 @@
                             maxlength="80"
                             message-when-value-missing="Task name is required."
                         ></lightning-input>
-                        <lightning-record-picker
+                        <lightning-select
                             class="taskProject-input"
+                            name="Project"
                             label="Project"
-                            placeholder="Search Projects..."
-                            object-api-name="Team_Projects__c"
-                            value={projectId}
-                            onchange={handleProjectChange}
+                            value={valueProject}
+                            options={optionsProject}
+                            onchange={handleChangeProject}
                             required
-                            message-when-value-missing="Select a project for this task."
-                        ></lightning-record-picker>
+                        ></lightning-select>
                     </div>
                     <div class="teamTasks_header-create-form-secondRow">
                         <lightning-select
@@ -34,14 +33,15 @@
                             onchange={handleChangePriority}
                             required
                         ></lightning-select>
-                        <lightning-record-picker
+                        <lightning-select
                             class="taskAssignedTo-input"
+                            name="Assigned To"
                             label="Assigned To"
-                            placeholder="Search Members..."
-                            object-api-name="Team_Members__c"
+                            value={valueAssignedTo}
+                            options={optionsAssignedTo}
+                            onchange={handleChangeAssignedTo}
                             required
-                            message-when-value-missing="Select a project for this task."
-                        ></lightning-record-picker>
+                        ></lightning-select>
                         <lightning-input
                             class="taskDueDate-input"
                             type="date" 

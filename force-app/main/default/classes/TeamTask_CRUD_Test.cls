@@ -62,6 +62,18 @@ private class TeamTask_CRUD_Test {
     }
 
     @isTest
+    static void testGetAllTeamProjects() {
+        List<Team_Projects__c> projects = TeamTasks_CRUD.getAllTeamProjects();
+        System.assertEquals(2, projects.size(), 'Expected 2 projects to be returned');
+    }
+
+    @isTest
+    static void testGetAllTeamMembers() {
+        List<Team_Members__c> members = TeamTasks_CRUD.getAllTeamMembers();
+        System.assertEquals(2, members.size(), 'Expected 2 members to be returned');
+    }
+
+    @isTest
     static void testHandleCreateTask() {
         String taskName = 'New Task';
         String taskProject = [SELECT Id FROM Team_Projects__c LIMIT 1].Id;

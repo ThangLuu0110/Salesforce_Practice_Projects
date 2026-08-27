@@ -1,6 +1,8 @@
 import { LightningElement, wire, track } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import getAllTeamTasks from '@salesforce/apex/TeamTasks_CRUD.getAllTeamTasks';
+import getAllTeamProjects from '@salesforce/apex/TeamTasks_CRUD.getAllTeamProjects';
+import getAllTeamMembers from '@salesforce/apex/TeamTasks_CRUD.getAllTeamMembers';
 import handleCreateTask from '@salesforce/apex/TeamTasks_CRUD.handleCreateTask';
 import handleUpdateTasks from '@salesforce/apex/TeamTasks_CRUD.handleUpdateTasks';
 import handleInProgressTask from '@salesforce/apex/TeamTasks_CRUD.handleInProgressTask';
@@ -11,6 +13,10 @@ export default class TeamTasks extends LightningElement {
     teamTasksWiredResult;
     sortedBy;
     valuePriority = '';
+    valueProject = '';
+    optionsProject = [{ label: 'Choose Project...', value: '' }];
+    valueAssignedTo = '';
+    optionsAssignedTo = [{ label: 'Choose Member...', value: '' }];
     sortedDirection = 'asc';
     columns = COLUMNS;
     draftValues = [];
@@ -25,6 +31,30 @@ export default class TeamTasks extends LightningElement {
             { label: 'Medium', value: 'Medium' },
             { label: 'Low', value: 'Low' },
         ];
+    }
+
+    @wire(getAllTeamProjects) wiredTeamProjects({ data, error }) {
+        if (data) {
+            this.optionsProject = [
+                { label: 'Choose Project...', value: '' },
+                ...data.map((project) => ({ label: project.Name, value: project.Id })),
+            ];
+        } else if (error) {
+            this.optionsProject = [{ label: 'Choose Project...', value: '' }];
+            console.error('Error fetching team projects:', error);
+        }
+    }
+
+    @wire(getAllTeamMembers) wiredTeamMembers({ data, error }) {
+        if (data) {
+            this.optionsAssignedTo = [
+                { label: 'Choose Member...', value: '' },
+                ...data.map((member) => ({ label: member.Name, value: member.Id })),
+            ];
+        } else if (error) {
+            this.optionsAssignedTo = [{ label: 'Choose Member...', value: '' }];
+            console.error('Error fetching team members:', error);
+        }
     }
 
     @wire(getAllTeamTasks) wiredTeamTasks(result) {
@@ -55,9 +85,9 @@ export default class TeamTasks extends LightningElement {
         }
         
         const taskName = this.template.querySelector('.taskName-input').value;
-        const taskProject = this.template.querySelector('.taskProject-input').value;
+        const taskProject = this.valueProject;
         const taskPriority = this.valuePriority;
-        const taskAssignedTo = this.template.querySelector('.taskAssignedTo-input').value;
+        const taskAssignedTo = this.valueAssignedTo;
         const taskDueDate = this.template.querySelector('.taskDueDate-input').value;
         const taskEstimatedHours = this.template.querySelector('.taskEstimatedHours-input').value;
 
@@ -202,15 +232,19 @@ export default class TeamTasks extends LightningElement {
         this.valuePriority = event.detail.value;
     }
 
-    handleProjectChange(event) {
-        this.projectId = event.detail.recordId;
+    handleChangeProject(event) {
+        this.valueProject = event.detail.value;
+    }
+
+    handleChangeAssignedTo(event) {
+        this.valueAssignedTo = event.detail.value;
     }
 
     handleResetValues() {
         this.template.querySelector('.taskName-input').value = '';
-        this.projectId = null;
+        this.valueProject = '';
         this.valuePriority = '';
-        this.template.querySelector('.taskAssignedTo-input').value = null;
+        this.valueAssignedTo = '';
         this.template.querySelector('.taskDueDate-input').value = '';
         this.template.querySelector('.taskEstimatedHours-input').value = '';
     }

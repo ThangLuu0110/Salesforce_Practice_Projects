@@ -4,6 +4,24 @@ public with sharing class TeamTasks_CRUD {
     }
 
     @AuraEnabled(cacheable=true)
+    public static List<Team_Projects__c> getAllTeamProjects() {
+        List<Team_Projects__c> teamProjects = [
+            SELECT Id, Name 
+            FROM Team_Projects__c
+        ];
+        return teamProjects;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Team_Members__c> getAllTeamMembers() {
+        List<Team_Members__c> teamMembers = [
+            SELECT Id, Name 
+            FROM Team_Members__c
+        ];
+        return teamMembers;
+    }
+
+    @AuraEnabled(cacheable=true)
     public static List<Team_Tasks__c> getAllTeamTasks() {
         List<Team_Tasks__c> teamTasks = [
             SELECT Id, Name, Team_Projects__r.Name, 
