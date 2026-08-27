@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowTest xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flowApiName>Activate_Related_Projects</flowApiName>
+    <flowTestDataSources>
+        <apexClass>ARP_TestSetUp</apexClass>
+        <dataSourceType>ApexClass</dataSourceType>
+    </flowTestDataSources>
+    <flowTestFlowVersions>
+        <flowVersionNumber>1</flowVersionNumber>
+    </flowTestFlowVersions>
+    <isolatedObjectExternalKeys>
+        <keyFields>
+            <fieldName>Team_Members_Roles__c</fieldName>
+        </keyFields>
+        <objectType>Team_Members__c</objectType>
+    </isolatedObjectExternalKeys>
+    <isolatedObjectExternalKeys>
+        <keyFields>
+            <fieldName>Project_Due_Date__c</fieldName>
+        </keyFields>
+        <objectType>Team_Projects__c</objectType>
+    </isolatedObjectExternalKeys>
+    <isolatedObjectExternalKeys>
+        <keyFields>
+            <fieldName>Tasks_Priority__c</fieldName>
+        </keyFields>
+        <objectType>Team_Tasks__c</objectType>
+    </isolatedObjectExternalKeys>
+    <label>Test Activate Related Project</label>
+    <testPoints>
+        <elementApiName>Start</elementApiName>
+        <isUseMockOutput>false</isUseMockOutput>
+        <parameters>
+            <leftValueReference>$Record</leftValueReference>
+            <type>InputTriggeringRecordInitial</type>
+            <value>
+                <jsonValue>{&quot;fields&quot;:{&quot;Tasks_Priority__c&quot;:&quot;High&quot;},&quot;attributes&quot;:{&quot;type&quot;:&quot;Team_Tasks__c&quot;}}</jsonValue>
+            </value>
+        </parameters>
+    </testPoints>
+    <testPoints>
+        <assertions>
+            <conditions>
+                <leftValueReference>Activate_Team_Projects</leftValueReference>
+                <operator>WasVisited</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <errorMessage>Related Project hasn&apos;t been Activated</errorMessage>
+        </assertions>
+        <assertions>
+            <conditions>
+                <leftValueReference>$Record.Team_Projects__r.Project_Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Active</stringValue>
+                </rightValue>
+            </conditions>
+            <errorMessage>Related Project hasn&apos;t been Activated</errorMessage>
+        </assertions>
+        <elementApiName>Finish</elementApiName>
+        <isUseMockOutput>false</isUseMockOutput>
+    </testPoints>
+    <testType>WithAssertion</testType>
+</FlowTest>
