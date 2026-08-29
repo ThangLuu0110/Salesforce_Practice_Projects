@@ -1,0 +1,96 @@
+<template>
+    <div class="teamTasks">
+        <header class="teamTasks_header">
+            <form class="teamTasks_header-create">
+                <div class="teamTasks_header-create-form">
+                    <div class="teamTasks_header-create-form-firstRow">
+                        <lightning-input
+                            class="taskName-input"
+                            type="text" 
+                            label="Task Name" 
+                            placeholder="Enter Task Name"
+                            required
+                            maxlength="80"
+                            message-when-value-missing="Task name is required."
+                        ></lightning-input>
+                        <lightning-select
+                            class="taskProject-input"
+                            name="Project"
+                            label="Project"
+                            value={valueProject}
+                            options={optionsProject}
+                            onchange={handleChangeProject}
+                            required
+                        ></lightning-select>
+                    </div>
+                    <div class="teamTasks_header-create-form-secondRow">
+                        <lightning-select
+                            class="taskPriority-input"
+                            name="Priority"
+                            label="Priority"
+                            value={valuePriority}
+                            options={optionsPriority}
+                            onchange={handleChangePriority}
+                            required
+                        ></lightning-select>
+                        <lightning-select
+                            class="taskAssignedTo-input"
+                            name="Assigned To"
+                            label="Assigned To"
+                            value={valueAssignedTo}
+                            options={optionsAssignedTo}
+                            onchange={handleChangeAssignedTo}
+                            required
+                        ></lightning-select>
+                        <lightning-input
+                            class="taskDueDate-input"
+                            type="date" 
+                            label="Due Date" 
+                            placeholder="Enter Due Date"
+                        ></lightning-input>
+                        <lightning-input
+                            class="taskEstimatedHours-input"
+                            type="number" 
+                            label="Estimated Hours" 
+                            placeholder="Enter Estimated Hours"
+                        ></lightning-input>
+                    </div>
+                </div>
+                <div class="teamTasks_header-create-button">
+                    <lightning-button
+                        class="teamTasks_header-create-button-create"
+                        label="Create Task" 
+                        variant="brand" 
+                        onclick={handleCreateTask}
+                    ></lightning-button>
+                    <lightning-button
+                        class="teamTasks_header-create-button-inProgress"
+                        label="In Progress" 
+                        variant="success" 
+                        onclick={handleInProgressTask}
+                    ></lightning-button>
+                    <lightning-button 
+                        class="teamTasks_header-create-button-delete"
+                        label="Delete" 
+                        variant="destructive-text" 
+                        onclick={handleDeleteTask}
+                    ></lightning-button>
+                </div>
+            </form>
+        </header>
+        <section class="teamTasks_task-table">
+            <lightning-datatable
+                key-field="Id"
+                data={teamTasksList}
+                columns={columns}
+                onrowselection={handleTasksSelection}
+                draft-values={draftValues}
+                onsave={handleUpdateTask}
+                sorted-by={sortedBy}
+                sorted-direction={sortedDirection}
+                onsort={handleSort}
+            >
+            </lightning-datatable>
+        </section>
+    </div>
+</template> 

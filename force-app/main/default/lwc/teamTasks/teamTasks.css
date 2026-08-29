@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.teamTasks_header-create-form-firstRow{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 10px;
+}
+
+.teamTasks_header-create-form-secondRow{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.teamTasks_header-create-button {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin: 10px auto;
+}
+
+.teamTasks_header-create-button lightning-button {
+    margin-left: 10px;
+}
+
