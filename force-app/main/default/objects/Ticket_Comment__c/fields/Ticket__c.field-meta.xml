@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ticket__c</fullName>
+    <description>Parent TIcket</description>
+    <label>Ticket</label>
+    <referenceTo>IT_Ticket__c</referenceTo>
+    <relationshipLabel>Ticket Comment</relationshipLabel>
+    <relationshipName>Ticket_Comment</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>
