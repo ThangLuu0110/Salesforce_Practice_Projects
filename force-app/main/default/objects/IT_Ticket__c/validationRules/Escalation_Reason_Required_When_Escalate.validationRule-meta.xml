@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Escalation_Reason_Required_When_Escalate</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(Status__c, &apos;Escalated&apos;), ISBLANK(Escalation_Reason__c))</errorConditionFormula>
+    <errorMessage>Please enter the escalation reason before changing the status to Escalated.</errorMessage>
+</ValidationRule>

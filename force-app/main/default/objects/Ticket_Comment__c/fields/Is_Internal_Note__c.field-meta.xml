@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Internal_Note__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Internal note (Agent-only), not visible to the employee.</description>
+    <label>Is Internal Note</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
